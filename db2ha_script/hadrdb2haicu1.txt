@@ -1,0 +1,40 @@
+
+db2 deactivate database cmndb
+# db2 start hadr on database cmndb as standby
+
+db2 UPDATE DBM CFG USING cluster_mgr NULL
+db2 deactivate database hadb 
+# db2 start hadr on database cmndb as primary
+
+
+db2pd -d cmndb -hadr
+或
+db2pd -hadr -db cmndb
+
+
+db2 connect to cmndb
+create table hatbl(msgid char(5),msg char(20))
+insert into db2inst1.hatbl values ('msg01','hello HADR')
+insert into db2inst1.hatbl values ('msg02','hello HADR')
+
+db2 stop hadr
+
+db2 deactivate db cmndb
+db2 activate db cmndb
+
+db2 get db cfg for cmndb | grep HADR 
+
+
+db2 takeover HADR on database cmndb
+db2pd -d cmndb -hadr
+
+
+
+
+db2pd -d cmndb -dbcfg
+
+
+lssam
+Password change results
+
+Thank you, the password for cn=JunJie Yan,cn=Shanghai,dc=iic,dc=ihost,dc=com has been updated
